@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rTMS 失眠治療日誌</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7B68A6;
+            --primary-light: #9B88C6;
+            --secondary: #E8DFF5;
+            --bg: #FFF9F5;
+            --card: #FFFFFF;
+            --text: #4A4A4A;
+            --text-light: #7A7A7A;
+            --border: #E5E5E5;
+            --success: #6B9D7C;
+            --warning: #E8A87C;
+            --danger: #D97B7B;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav button {
+            flex: 0 0 auto;
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .radio-item {
+            flex: 1;
+            min-width: 60px;
+        }
+
+        .radio-item input[type="radio"] {
+            display: none;
+        }
+
+        .radio-item label {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0;
+        }
+
+        .radio-item input[type="radio"]:checked + label {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            width: auto;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .info-box {
+            background: var(--secondary);
+            padding: 16px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .warning-box {
+            background: #FFF4E6;
+            border-left-color: var(--warning);
+        }
+
+        .entry-item {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .entry-date {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .entry-session {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .entry-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .stat-item {
+            font-size: 14px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--primary);
+        }
+
+        .entry-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-box .number {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-box .label {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            margin: 20px 0;
+            overflow: visible;
+        }
+
+        .chart-container svg {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-table th {
+            background: var(--secondary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 8px;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .data-table th {
+            background: var(--secondary);
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .nav, .btn, header {
+                display: none;
+            }
+
+            .card {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .chart-container {
+                page-break-inside: avoid;
+            }
+        }
+
+        .computed-value {
+            display: inline-block;
+            margin-left: 10px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .row .form-group {
+            flex: 1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>rTMS 失眠治療日誌</h1>
+            <p class="subtitle" id="headerSubtitle">記錄您的治療進展</p>
+        </div>
+    </header>
+
+    <div class="nav">
+        <button onclick="showView('daily')" class="active" data-view="daily">每日記錄</button>
+        <button onclick="showView('history')" data-view="history">歷史記錄</button>
+        <button onclick="showView('report')" data-view="report">醫生報告</button>
+        <button onclick="showView('setup')" data-view="setup">設定</button>
+        <button onclick="showView('backup')" data-view="backup">備份</button>
+    </div>
+
+    <div class="container">
+        <!-- Setup View -->
+        <div id="setupView" class="view">
+            <div class="card">
+                <h2>治療設定</h2>
+                <form id="setupForm" onsubmit="saveSetup(event)">
+                    <div class="form-group">
+                        <label for="startDate">治療開始日期</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="totalSessions">預計療程次數</label>
+                        <input type="number" id="totalSessions" value="20" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickname">暱稱（選填）</label>
+                        <input type="text" id="nickname" placeholder="例如：小美">
+                    </div>
+                    <button type="submit" class="btn">儲存設定</button>
+                </form>
+            </div>
+
+            <div class="info-box warning-box">
+                <strong>📌 重要提醒</strong><br>
+                此日誌僅供個人記錄使用，不構成醫療建議。所有資料儲存在您的手機瀏覽器中，清除瀏覽器資料將會刪除所有記錄。建議定期進行備份。
+            </div>
+        </div>
+
+        <!-- Daily Log View -->
+        <div id="dailyView" class="view active">
+            <div class="info-box" id="checkpointInfo" style="display: none;"></div>
+
+            <div class="card">
+                <h2 id="formTitle">今日記錄</h2>
+                <form id="dailyForm" onsubmit="saveDailyLog(event)">
+                    <input type="hidden" id="entryId">
+                    
+                    <div class="form-group">
+                        <label for="logDate">日期</label>
+                        <input type="date" id="logDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>今天有進行 rTMS 療程嗎？</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hadSession" onchange="toggleSessionNumber()">
+                                <label for="hadSession">是，有進行療程</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="sessionNumberGroup" style="display: none;">
+                        <label for="sessionNumber">療程次數</label>
+                        <input type="number" id="sessionNumber" min="1" placeholder="例如：第 5 次">
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label for="bedtime">上床時間</label>
+                            <input type="time" id="bedtime" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="waketime">起床時間</label>
+                            <input type="time" id="waketime" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>總睡眠時數<span class="computed-value" id="hoursSlept">--</span></label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sleepLatency">入睡時間（分鐘）</label>
+                        <input type="number" id="sleepLatency" min="0" placeholder="例如：30" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="awakenings">夜間醒來次數</label>
+                        <input type="number" id="awakenings" min="0" value="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>早晨起床時的精神狀態（1-10）</label>
+                        <div class="radio-group">
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="1" id="energy1" required><label for="energy1">1</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="2" id="energy2"><label for="energy2">2</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="3" id="energy3"><label for="energy3">3</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="4" id="energy4"><label for="energy4">4</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="5" id="energy5"><label for="energy5">5</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="6" id="energy6"><label for="energy6">6</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="7" id="energy7"><label for="energy7">7</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="8" id="energy8"><label for="energy8">8</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="9" id="energy9"><label for="energy9">9</label></div>
+                            <div class="radio-item"><input type="radio" name="morningEnergy" value="10" id="energy10"><label for="energy10">10</label></div>
+                        </div>
+                        <small style="color: var(--text-light); display: block; margin-top: 8px;">1 = 非常疲憊，10 = 精神飽滿</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>日間嗜睡/疲勞程度（1-10）</label>
+                        <div class="radio-group">
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="1" id="sleep1" required><label for="sleep1">1</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="2" id="sleep2"><label for="sleep2">2</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="3" id="sleep3"><label for="sleep3">3</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="4" id="sleep4"><label for="sleep4">4</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="5" id="sleep5"><label for="sleep5">5</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="6" id="sleep6"><label for="sleep6">6</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="7" id="sleep7"><label for="sleep7">7</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="8" id="sleep8"><label for="sleep8">8</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="9" id="sleep9"><label for="sleep9">9</label></div>
+                            <div class="radio-item"><input type="radio" name="daytimeSleepiness" value="10" id="sleep10"><label for="sleep10">10</label></div>
+                        </div>
+                        <small style="color: var(--text-light); display: block; margin-top: 8px;">1 = 完全不睏，10 = 極度疲憊想睡</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>今天有午睡嗎？</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="hadNap" onchange="toggleNapDuration()">
+                                <label for="hadNap">是，有午睡</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="napDurationGroup" style="display: none;">
+                        <label for="napDuration">午睡時長（分鐘）</label>
+                        <input type="number" id="napDuration" min="0" placeholder="例如：30">
+                    </div>
+
+                    <div class="form-group">
+                        <label>副作用（可複選）</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sideHeadache" value="頭痛">
+                                <label for="sideHeadache">頭痛</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sideScalp" value="頭皮不適">
+                                <label for="sideScalp">頭皮不適</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sideDizziness" value="頭暈">
+                                <label for="sideDizziness">頭暈</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sideOther" value="其他" onchange="toggleOtherSideEffect()">
+                                <label for="sideOther">其他</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="otherSideEffectGroup" style="display: none;">
+                        <label for="otherSideEffect">其他副作用說明</label>
+                        <input type="text" id="otherSideEffect" placeholder="請說明">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">備註</label>
+                        <textarea id="notes" placeholder="任何想記錄的事項..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">儲存記錄</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelEdit()" id="cancelBtn" style="display: none; margin-top: 10px;">取消編輯</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- History View -->
+        <div id="historyView" class="view">
+            <div class="card">
+                <h2>歷史記錄</h2>
+                <div id="entriesList"></div>
+            </div>
+        </div>
+
+        <!-- Report View -->
+        <div id="reportView" class="view">
+            <div class="card">
+                <h2>治療報告</h2>
+                
+                <div class="form-group">
+                    <label>報告日期範圍</label>
+                    <div class="row">
+                        <input type="date" id="reportStartDate">
+                        <input type="date" id="reportEndDate">
+                    </div>
+                    <button onclick="generateReport()" class="btn btn-secondary" style="margin-top: 10px;">產生報告</button>
+                </div>
+            </div>
+
+            <div id="reportContent"></div>
+
+            <div class="card" id="reportActions" style="display: none;">
+                <button onclick="window.print()" class="btn">列印 / 儲存為 PDF</button>
+                <button onclick="exportCSV()" class="btn btn-secondary" style="margin-top: 10px;">匯出 CSV</button>
+            </div>
+        </div>
+
+        <!-- Backup View -->
+        <div id="backupView" class="view">
+            <div class="info-box warning-box">
+                <strong>⚠️ 資料儲存提醒</strong><br>
+                您的所有資料僅儲存在此手機瀏覽器的 localStorage 中。如果清除瀏覽器資料、更換手機或重新安裝瀏覽器，所有記錄將會遺失。<br><br>
+                <strong>建議定期匯出備份檔案，並妥善保存。</strong>
+            </div>
+
+            <div class="card">
+                <h2>匯出備份</h2>
+                <p style="margin-bottom: 16px; color: var(--text-light);">將所有資料匯出為 JSON 檔案，可用於還原或轉移至其他裝置。</p>
+                <button onclick="exportBackup()" class="btn">匯出所有資料</button>
+            </div>
+
+            <div class="card">
+                <h2>匯入備份</h2>
+                <p style="margin-bottom: 16px; color: var(--text-light);">從先前匯出的 JSON 檔案還原資料。現有資料將會被覆蓋。</p>
+                <input type="file" id="importFile" accept=".json" style="margin-bottom: 12px;">
+                <button onclick="importBackup()" class="btn btn-secondary">匯入備份檔案</button>
+            </div>
+
+            <div class="card">
+                <h2>清除所有資料</h2>
+                <p style="margin-bottom: 16px; color: var(--text-light);">永久刪除所有記錄。此操作無法復原。</p>
+                <button onclick="clearAllData()" class="btn btn-danger">清除所有資料</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Management
+        const STORAGE_KEYS = {
+            SETUP: 'rtms_setup',
+            ENTRIES: 'rtms_entries'
+        };
+
+        function getSetup() {
+            const data = localStorage.getItem(STORAGE_KEYS.SETUP);
+            return data ? JSON.parse(data) : null;
+        }
+
+        function saveSetupData(setup) {
+            localStorage.setItem(STORAGE_KEYS.SETUP, JSON.stringify(setup));
+        }
+
+        function getEntries() {
+            const data = localStorage.getItem(STORAGE_KEYS.ENTRIES);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function saveEntries(entries) {
+            localStorage.setItem(STORAGE_KEYS.ENTRIES, JSON.stringify(entries));
+        }
+
+        // View Management
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(viewName + 'View').classList.add('active');
+            document.querySelector(`[data-view="${viewName}"]`).classList.add('active');
+
+            if (viewName === 'history') {
+                renderHistory();
+            } else if (viewName === 'daily') {
+                updateCheckpointInfo();
+            } else if (viewName === 'setup') {
+                loadSetup();
+            }
+        }
+
+        // Setup Form
+        function saveSetup(event) {
+            event.preventDefault();
+            const setup = {
+                startDate: document.getElementById('startDate').value,
+                totalSessions: parseInt(document.getElementById('totalSessions').value),
+                nickname: document.getElementById('nickname').value
+            };
+            saveSetupData(setup);
+            alert('設定已儲存！');
+            updateHeaderSubtitle();
+        }
+
+        function loadSetup() {
+            const setup = getSetup();
+            if (setup) {
+                document.getElementById('startDate').value = setup.startDate;
+                document.getElementById('totalSessions').value = setup.totalSessions;
+                document.getElementById('nickname').value = setup.nickname || '';
+            }
+        }
+
+        function updateHeaderSubtitle() {
+            const setup = getSetup();
+            if (setup && setup.nickname) {
+                document.getElementById('headerSubtitle').textContent = `${setup.nickname}的治療記錄`;
+            }
+        }
+
+        // Daily Log Form
+        function initDailyForm() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('logDate').value = today;
+            
+            // Calculate sleep hours
+            document.getElementById('bedtime').addEventListener('change', calculateSleepHours);
+            document.getElementById('waketime').addEventListener('change', calculateSleepHours);
+        }
+
+        function calculateSleepHours() {
+            const bedtime = document.getElementById('bedtime').value;
+            const waketime = document.getElementById('waketime').value;
+            
+            if (bedtime && waketime) {
+                const bed = new Date(`2000-01-01 ${bedtime}`);
+                let wake = new Date(`2000-01-01 ${waketime}`);
+                
+                // Handle past midnight
+                if (wake < bed) {
+                    wake = new Date(`2000-01-02 ${waketime}`);
+                }
+                
+                const hours = (wake - bed) / (1000 * 60 * 60);
+                document.getElementById('hoursSlept').textContent = `${hours.toFixed(1)} 小時`;
+            }
+        }
+
+        function toggleSessionNumber() {
+            const hadSession = document.getElementById('hadSession').checked;
+            const group = document.getElementById('sessionNumberGroup');
+            const input = document.getElementById('sessionNumber');
+            
+            if (hadSession) {
+                group.style.display = 'block';
+                input.required = true;
+                
+                // Auto-suggest next session number
+                const entries = getEntries();
+                const lastSession = entries
+                    .filter(e => e.hadSession)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+                
+                if (lastSession) {
+                    input.value = lastSession.sessionNumber + 1;
+                } else {
+                    input.value = 1;
+                }
+            } else {
+                group.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        function toggleNapDuration() {
+            const hadNap = document.getElementById('hadNap').checked;
+            const group = document.getElementById('napDurationGroup');
+            const input = document.getElementById('napDuration');
+            
+            group.style.display = hadNap ? 'block' : 'none';
+            input.required = hadNap;
+            if (!hadNap) input.value = '';
+        }
+
+        function toggleOtherSideEffect() {
+            const checked = document.getElementById('sideOther').checked;
+            const group = document.getElementById('otherSideEffectGroup');
+            const input = document.getElementById('otherSideEffect');
+            
+            group.style.display = checked ? 'block' : 'none';
+            input.required = checked;
+            if (!checked) input.value = '';
+        }
+
+        function saveDailyLog(event) {
+            event.preventDefault();
+            
+            const entries = getEntries();
+            const entryId = document.getElementById('entryId').value;
+            
+            // Collect side effects
+            const sideEffects = [];
+            if (document.getElementById('sideHeadache').checked) sideEffects.push('頭痛');
+            if (document.getElementById('sideScalp').checked) sideEffects.push('頭皮不適');
+            if (document.getElementById('sideDizziness').checked) sideEffects.push('頭暈');
+            if (document.getElementById('sideOther').checked && document.getElementById('otherSideEffect').value) {
+                sideEffects.push(document.getElementById('otherSideEffect').value);
+            }
+
+            const entry = {
+                id: entryId || Date.now().toString(),
+                date: document.getElementById('logDate').value,
+                hadSession: document.getElementById('hadSession').checked,
+                sessionNumber: document.getElementById('hadSession').checked ? parseInt(document.getElementById('sessionNumber').value) : null,
+                bedtime: document.getElementById('bedtime').value,
+                waketime: document.getElementById('waketime').value,
+                hoursSlept: calculateHoursSlept(document.getElementById('bedtime').value, document.getElementById('waketime').value),
+                sleepLatency: parseInt(document.getElementById('sleepLatency').value),
+                awakenings: parseInt(document.getElementById('awakenings').value),
+                morningEnergy: parseInt(document.querySelector('input[name="morningEnergy"]:checked').value),
+                daytimeSleepiness: parseInt(document.querySelector('input[name="daytimeSleepiness"]:checked').value),
+                hadNap: document.getElementById('hadNap').checked,
+                napDuration: document.getElementById('hadNap').checked ? parseInt(document.getElementById('napDuration').value) : null,
+                sideEffects: sideEffects,
+                notes: document.getElementById('notes').value
+            };
+
+            if (entryId) {
+                // Update existing
+                const index = entries.findIndex(e => e.id === entryId);
+                entries[index] = entry;
+            } else {
+                // Add new
+                entries.push(entry);
+            }
+
+            saveEntries(entries);
+            alert('記錄已儲存！');
+            resetDailyForm();
+            updateCheckpointInfo();
+        }
+
+        function calculateHoursSlept(bedtime, waketime) {
+            const bed = new Date(`2000-01-01 ${bedtime}`);
+            let wake = new Date(`2000-01-01 ${waketime}`);
+            if (wake < bed) wake = new Date(`2000-01-02 ${waketime}`);
+            return parseFloat(((wake - bed) / (1000 * 60 * 60)).toFixed(1));
+        }
+
+        function resetDailyForm() {
+            document.getElementById('dailyForm').reset();
+            document.getElementById('entryId').value = '';
+            document.getElementById('formTitle').textContent = '今日記錄';
+            document.getElementById('submitBtn').textContent = '儲存記錄';
+            document.getElementById('cancelBtn').style.display = 'none';
+            document.getElementById('sessionNumberGroup').style.display = 'none';
+            document.getElementById('napDurationGroup').style.display = 'none';
+            document.getElementById('otherSideEffectGroup').style.display = 'none';
+            document.getElementById('hoursSlept').textContent = '--';
+            initDailyForm();
+        }
+
+        function cancelEdit() {
+            resetDailyForm();
+            showView('history');
+        }
+
+        // History
+        function renderHistory() {
+            const entries = getEntries().sort((a, b) => new Date(b.date) - new Date(a.date));
+            const container = document.getElementById('entriesList');
+
+            if (entries.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>尚無記錄</p>
+                        <p style="font-size: 14px; margin-top: 8px;">開始記錄您的第一筆資料吧！</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = entries.map(entry => `
+                <div class="entry-item">
+                    <div class="entry-header">
+                        <span class="entry-date">${entry.date}</span>
+                        ${entry.hadSession ? `<span class="entry-session">第 ${entry.sessionNumber} 次</span>` : ''}
+                    </div>
+                    <div class="entry-stats">
+                        <div class="stat-item">
+                            <div class="stat-label">睡眠時數</div>
+                            <div class="stat-value">${entry.hoursSlept} 小時</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">入睡時間</div>
+                            <div class="stat-value">${entry.sleepLatency} 分鐘</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">夜醒次數</div>
+                            <div class="stat-value">${entry.awakenings} 次</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">晨起精神</div>
+                            <div class="stat-value">${entry.morningEnergy} / 10</div>
+                        </div>
+                    </div>
+                    ${entry.notes ? `<p style="font-size: 14px; color: var(--text-light); margin-top: 8px;">${entry.notes}</p>` : ''}
+                    <div class="entry-actions">
+                        <button class="btn btn-small btn-secondary" onclick="editEntry('${entry.id}')">編輯</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteEntry('${entry.id}')">刪除</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editEntry(id) {
+            const entries = getEntries();
+            const entry = entries.find(e => e.id === id);
+            
+            if (!entry) return;
+
+            // Populate form
+            document.getElementById('entryId').value = entry.id;
+            document.getElementById('logDate').value = entry.date;
+            document.getElementById('hadSession').checked = entry.hadSession;
+            if (entry.hadSession) {
+                document.getElementById('sessionNumberGroup').style.display = 'block';
+                document.getElementById('sessionNumber').value = entry.sessionNumber;
+            }
+            document.getElementById('bedtime').value = entry.bedtime;
+            document.getElementById('waketime').value = entry.waketime;
+            document.getElementById('sleepLatency').value = entry.sleepLatency;
+            document.getElementById('awakenings').value = entry.awakenings;
+            document.querySelector(`input[name="morningEnergy"][value="${entry.morningEnergy}"]`).checked = true;
+            document.querySelector(`input[name="daytimeSleepiness"][value="${entry.daytimeSleepiness}"]`).checked = true;
+            document.getElementById('hadNap').checked = entry.hadNap;
+            if (entry.hadNap) {
+                document.getElementById('napDurationGroup').style.display = 'block';
+                document.getElementById('napDuration').value = entry.napDuration;
+            }
+            
+            // Side effects
+            document.getElementById('sideHeadache').checked = entry.sideEffects.includes('頭痛');
+            document.getElementById('sideScalp').checked = entry.sideEffects.includes('頭皮不適');
+            document.getElementById('sideDizziness').checked = entry.sideEffects.includes('頭暈');
+            
+            const otherSE = entry.sideEffects.find(s => !['頭痛', '頭皮不適', '頭暈'].includes(s));
+            if (otherSE) {
+                document.getElementById('sideOther').checked = true;
+                document.getElementById('otherSideEffectGroup').style.display = 'block';
+                document.getElementById('otherSideEffect').value = otherSE;
+            }
+            
+            document.getElementById('notes').value = entry.notes;
+            
+            document.getElementById('formTitle').textContent = '編輯記錄';
+            document.getElementById('submitBtn').textContent = '更新記錄';
+            document.getElementById('cancelBtn').style.display = 'block';
+            
+            calculateSleepHours();
+            showView('daily');
+        }
+
+        function deleteEntry(id) {
+            if (!confirm('確定要刪除此記錄嗎？此操作無法復原。')) return;
+            
+            let entries = getEntries();
+            entries = entries.filter(e => e.id !== id);
+            saveEntries(entries);
+            renderHistory();
+        }
+
+        // Checkpoint Info
+        function updateCheckpointInfo() {
+            const entries = getEntries();
+            const sessionEntries = entries.filter(e => e.hadSession);
+            const sessionCount = sessionEntries.length;
+            const infoBox = document.getElementById('checkpointInfo');
+
+            if (sessionCount === 0) {
+                infoBox.innerHTML = `
+                    <strong>💡 治療觀察重點</strong><br>
+                    • 第 1-5 次療程：初期觀察階段，效果尚不明顯是正常的<br>
+                    • 第 10 次左右：開始評估日間精神和睡眠品質的改善<br>
+                    • 第 20 次療程：完整評估療效，與醫師討論後續規劃
+                `;
+                infoBox.style.display = 'block';
+            } else if (sessionCount <= 5) {
+                infoBox.innerHTML = `
+                    <strong>📊 目前進度：第 ${sessionCount} 次療程</strong><br>
+                    目前處於初期觀察階段，效果尚不明顯是正常的。建議持續記錄，約在第 10 次療程時可開始評估改善狀況。
+                `;
+                infoBox.style.display = 'block';
+            } else if (sessionCount >= 10 && sessionCount < 20) {
+                infoBox.innerHTML = `
+                    <strong>📊 目前進度：第 ${sessionCount} 次療程</strong><br>
+                    已進入中期階段！建議觀察日間精神狀態和睡眠品質是否有改善。如有任何問題請與醫師討論。
+                `;
+                infoBox.style.display = 'block';
+            } else if (sessionCount >= 20) {
+                infoBox.innerHTML = `
+                    <strong>🎯 目前進度：第 ${sessionCount} 次療程</strong><br>
+                    已完成預定療程！建議產生完整報告，與醫師討論療效評估及後續規劃。
+                `;
+                infoBox.style.display = 'block';
+            } else {
+                infoBox.style.display = 'none';
+            }
+        }
+
+        // Report Generation
+        function generateReport() {
+            const startDate = document.getElementById('reportStartDate').value;
+            const endDate = document.getElementById('reportEndDate').value;
+            
+            let entries = getEntries();
+            
+            if (startDate) {
+                entries = entries.filter(e => e.date >= startDate);
+            }
+            if (endDate) {
+                entries = entries.filter(e => e.date <= endDate);
+            }
+
+            if (entries.length === 0) {
+                alert('所選日期範圍內沒有記錄');
+                return;
+            }
+
+            entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const reportContent = document.getElementById('reportContent');
+            const setup = getSetup();
+
+            // Summary stats
+            const sessionEntries = entries.filter(e => e.hadSession);
+            const avgSleep = (entries.reduce((sum, e) => sum + e.hoursSlept, 0) / entries.length).toFixed(1);
+            const avgLatency = (entries.reduce((sum, e) => sum + e.sleepLatency, 0) / entries.length).toFixed(0);
+            const avgAwakenings = (entries.reduce((sum, e) => sum + e.awakenings, 0) / entries.length).toFixed(1);
+            const avgEnergy = (entries.reduce((sum, e) => sum + e.morningEnergy, 0) / entries.length).toFixed(1);
+            const avgSleepiness = (entries.reduce((sum, e) => sum + e.daytimeSleepiness, 0) / entries.length).toFixed(1);
+
+            // First vs Last 7 days comparison
+            const first7 = entries.slice(0, Math.min(7, entries.length));
+            const last7 = entries.slice(Math.max(0, entries.length - 7));
+
+            const compare = (arr, field) => (arr.reduce((sum, e) => sum + e[field], 0) / arr.length).toFixed(1);
+
+            // Side effects tally
+            const sideEffectCount = {};
+            entries.forEach(e => {
+                e.sideEffects.forEach(se => {
+                    sideEffectCount[se] = (sideEffectCount[se] || 0) + 1;
+                });
+            });
+
+            reportContent.innerHTML = `
+                <div class="stat-card">
+                    <h3 style="margin-bottom: 16px;">治療概況</h3>
+                    ${setup ? `<p style="opacity: 0.95; margin-bottom: 12px;">治療開始日期：${setup.startDate}</p>` : ''}
+                    <p style="opacity: 0.95; margin-bottom: 12px;">報告期間：${entries[0].date} 至 ${entries[entries.length-1].date}</p>
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="number">${sessionEntries.length}</div>
+                            <div class="label">完成療程次數</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">${entries.length}</div>
+                            <div class="label">記錄天數</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">${avgSleep}</div>
+                            <div class="label">平均睡眠時數</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">${avgEnergy}</div>
+                            <div class="label">平均晨起精神</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>平均數據</h2>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>項目</th>
+                            <th>平均值</th>
+                        </tr>
+                        <tr>
+                            <td>睡眠時數</td>
+                            <td>${avgSleep} 小時</td>
+                        </tr>
+                        <tr>
+                            <td>入睡時間</td>
+                            <td>${avgLatency} 分鐘</td>
+                        </tr>
+                        <tr>
+                            <td>夜醒次數</td>
+                            <td>${avgAwakenings} 次</td>
+                        </tr>
+                        <tr>
+                            <td>晨起精神</td>
+                            <td>${avgEnergy} / 10</td>
+                        </tr>
+                        <tr>
+                            <td>日間嗜睡</td>
+                            <td>${avgSleepiness} / 10</td>
+                        </tr>
+                    </table>
+                </div>
+
+                ${entries.length >= 14 ? `
+                <div class="card">
+                    <h2>前後期比較</h2>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>項目</th>
+                            <th>前 7 天平均</th>
+                            <th>近 7 天平均</th>
+                            <th>變化</th>
+                        </tr>
+                        <tr>
+                            <td>睡眠時數</td>
+                            <td>${compare(first7, 'hoursSlept')} 小時</td>
+                            <td>${compare(last7, 'hoursSlept')} 小時</td>
+                            <td style="color: ${parseFloat(compare(last7, 'hoursSlept')) > parseFloat(compare(first7, 'hoursSlept')) ? 'var(--success)' : 'var(--danger)'}">${(parseFloat(compare(last7, 'hoursSlept')) - parseFloat(compare(first7, 'hoursSlept'))).toFixed(1)}</td>
+                        </tr>
+                        <tr>
+                            <td>入睡時間</td>
+                            <td>${compare(first7, 'sleepLatency')} 分</td>
+                            <td>${compare(last7, 'sleepLatency')} 分</td>
+                            <td style="color: ${parseFloat(compare(last7, 'sleepLatency')) < parseFloat(compare(first7, 'sleepLatency')) ? 'var(--success)' : 'var(--danger)'}">${(parseFloat(compare(last7, 'sleepLatency')) - parseFloat(compare(first7, 'sleepLatency'))).toFixed(0)}</td>
+                        </tr>
+                        <tr>
+                            <td>晨起精神</td>
+                            <td>${compare(first7, 'morningEnergy')} / 10</td>
+                            <td>${compare(last7, 'morningEnergy')} / 10</td>
+                            <td style="color: ${parseFloat(compare(last7, 'morningEnergy')) > parseFloat(compare(first7, 'morningEnergy')) ? 'var(--success)' : 'var(--danger)'}">${(parseFloat(compare(last7, 'morningEnergy')) - parseFloat(compare(first7, 'morningEnergy'))).toFixed(1)}</td>
+                        </tr>
+                        <tr>
+                            <td>日間嗜睡</td>
+                            <td>${compare(first7, 'daytimeSleepiness')} / 10</td>
+                            <td>${compare(last7, 'daytimeSleepiness')} / 10</td>
+                            <td style="color: ${parseFloat(compare(last7, 'daytimeSleepiness')) < parseFloat(compare(first7, 'daytimeSleepiness')) ? 'var(--success)' : 'var(--danger)'}">${(parseFloat(compare(last7, 'daytimeSleepiness')) - parseFloat(compare(first7, 'daytimeSleepiness'))).toFixed(1)}</td>
+                        </tr>
+                    </table>
+                </div>
+                ` : ''}
+
+                <div class="card">
+                    <h2>睡眠時數趨勢</h2>
+                    <div class="chart-container">
+                        <svg id="sleepChart" width="100%" height="250"></svg>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>晨起精神趨勢</h2>
+                    <div class="chart-container">
+                        <svg id="energyChart" width="100%" height="250"></svg>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>日間嗜睡趨勢</h2>
+                    <div class="chart-container">
+                        <svg id="sleepinessChart" width="100%" height="250"></svg>
+                    </div>
+                </div>
+
+                ${Object.keys(sideEffectCount).length > 0 ? `
+                <div class="card">
+                    <h2>副作用統計</h2>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>副作用</th>
+                            <th>發生次數</th>
+                        </tr>
+                        ${Object.entries(sideEffectCount).map(([se, count]) => `
+                            <tr>
+                                <td>${se}</td>
+                                <td>${count} 次</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                </div>
+                ` : ''}
+
+                <div class="card">
+                    <h2>詳細記錄表</h2>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <tr>
+                                <th>日期</th>
+                                <th>療程</th>
+                                <th>睡眠時數</th>
+                                <th>入睡時間</th>
+                                <th>夜醒</th>
+                                <th>晨起精神</th>
+                                <th>日間嗜睡</th>
+                                <th>副作用</th>
+                            </tr>
+                            ${entries.map(e => `
+                                <tr>
+                                    <td>${e.date}</td>
+                                    <td>${e.hadSession ? `第${e.sessionNumber}次` : '-'}</td>
+                                    <td>${e.hoursSlept}h</td>
+                                    <td>${e.sleepLatency}min</td>
+                                    <td>${e.awakenings}次</td>
+                                    <td>${e.morningEnergy}/10</td>
+                                    <td>${e.daytimeSleepiness}/10</td>
+                                    <td>${e.sideEffects.join(', ') || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('reportActions').style.display = 'block';
+
+            // Render charts
+            setTimeout(() => {
+                renderCharts(entries);
+            }, 100);
+        }
+
+        function renderCharts(entries) {
+            const labels = entries.map(e => e.date.substring(5));
+            
+            // Sleep Hours Chart
+            renderLineChart('sleepChart', labels, entries.map(e => e.hoursSlept), {
+                color: '#7B68A6',
+                fillColor: 'rgba(123, 104, 166, 0.15)',
+                yMin: 0,
+                yMax: Math.ceil(Math.max(...entries.map(e => e.hoursSlept)) + 1),
+                yLabel: '小時',
+                showDecimals: true
+            });
+
+            // Energy Chart
+            renderLineChart('energyChart', labels, entries.map(e => e.morningEnergy), {
+                color: '#6B9D7C',
+                fillColor: 'rgba(107, 157, 124, 0.15)',
+                yMin: 0,
+                yMax: 10,
+                yLabel: '分數 (1-10)'
+            });
+
+            // Sleepiness Chart
+            renderLineChart('sleepinessChart', labels, entries.map(e => e.daytimeSleepiness), {
+                color: '#E8A87C',
+                fillColor: 'rgba(232, 168, 124, 0.15)',
+                yMin: 0,
+                yMax: 10,
+                yLabel: '分數 (1-10)'
+            });
+        }
+
+        function renderLineChart(svgId, labels, data, options) {
+            const svg = document.getElementById(svgId);
+            const container = svg.parentElement;
+            const width = container.clientWidth;
+            const height = 250;
+            const padding = { top: 20, right: 20, bottom: 40, left: 50 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            svg.innerHTML = '';
+
+            const yMin = options.yMin;
+            const yMax = options.yMax;
+            const yRange = yMax - yMin;
+
+            // Helper functions
+            const xScale = (index) => padding.left + (chartWidth / (data.length - 1)) * index;
+            const yScale = (value) => padding.top + chartHeight - ((value - yMin) / yRange) * chartHeight;
+
+            // Draw grid lines
+            const gridGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + (chartHeight / 4) * i;
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', padding.left);
+                line.setAttribute('y1', y);
+                line.setAttribute('x2', padding.left + chartWidth);
+                line.setAttribute('y2', y);
+                line.setAttribute('stroke', '#E5E5E5');
+                line.setAttribute('stroke-width', '1');
+                gridGroup.appendChild(line);
+
+                // Y-axis labels
+                const value = yMax - (yRange / 4) * i;
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', padding.left - 10);
+                text.setAttribute('y', y + 4);
+                text.setAttribute('text-anchor', 'end');
+                text.setAttribute('font-size', '12');
+                text.setAttribute('fill', '#7A7A7A');
+                text.textContent = options.showDecimals ? value.toFixed(1) : Math.round(value);
+                gridGroup.appendChild(text);
+            }
+            svg.appendChild(gridGroup);
+
+            // Draw filled area
+            if (options.fillColor) {
+                let pathD = `M ${xScale(0)} ${yScale(data[0])}`;
+                for (let i = 1; i < data.length; i++) {
+                    pathD += ` L ${xScale(i)} ${yScale(data[i])}`;
+                }
+                pathD += ` L ${xScale(data.length - 1)} ${padding.top + chartHeight}`;
+                pathD += ` L ${xScale(0)} ${padding.top + chartHeight} Z`;
+
+                const area = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                area.setAttribute('d', pathD);
+                area.setAttribute('fill', options.fillColor);
+                svg.appendChild(area);
+            }
+
+            // Draw line
+            let pathD = `M ${xScale(0)} ${yScale(data[0])}`;
+            for (let i = 1; i < data.length; i++) {
+                pathD += ` L ${xScale(i)} ${yScale(data[i])}`;
+            }
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', pathD);
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', options.color);
+            path.setAttribute('stroke-width', '3');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(path);
+
+            // Draw points
+            for (let i = 0; i < data.length; i++) {
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', xScale(i));
+                circle.setAttribute('cy', yScale(data[i]));
+                circle.setAttribute('r', '4');
+                circle.setAttribute('fill', options.color);
+                circle.setAttribute('stroke', 'white');
+                circle.setAttribute('stroke-width', '2');
+                svg.appendChild(circle);
+            }
+
+            // X-axis labels (show every nth label to avoid crowding)
+            const labelStep = Math.ceil(labels.length / 5);
+            for (let i = 0; i < labels.length; i += labelStep) {
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', xScale(i));
+                text.setAttribute('y', padding.top + chartHeight + 20);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('font-size', '11');
+                text.setAttribute('fill', '#7A7A7A');
+                text.textContent = labels[i];
+                svg.appendChild(text);
+            }
+
+            // Y-axis label
+            const yLabelText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            yLabelText.setAttribute('x', 15);
+            yLabelText.setAttribute('y', padding.top + chartHeight / 2);
+            yLabelText.setAttribute('text-anchor', 'middle');
+            yLabelText.setAttribute('font-size', '12');
+            yLabelText.setAttribute('fill', '#7A7A7A');
+            yLabelText.setAttribute('transform', `rotate(-90, 15, ${padding.top + chartHeight / 2})`);
+            yLabelText.textContent = options.yLabel;
+            svg.appendChild(yLabelText);
+        }
+
+        // CSV Export
+        function exportCSV() {
+            const startDate = document.getElementById('reportStartDate').value;
+            const endDate = document.getElementById('reportEndDate').value;
+            
+            let entries = getEntries();
+            
+            if (startDate) entries = entries.filter(e => e.date >= startDate);
+            if (endDate) entries = entries.filter(e => e.date <= endDate);
+            
+            entries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            const headers = ['日期', '療程次數', '睡眠時數', '入睡時間(分)', '夜醒次數', '晨起精神', '日間嗜睡', '午睡時長(分)', '副作用', '備註'];
+            const rows = entries.map(e => [
+                e.date,
+                e.hadSession ? e.sessionNumber : '',
+                e.hoursSlept,
+                e.sleepLatency,
+                e.awakenings,
+                e.morningEnergy,
+                e.daytimeSleepiness,
+                e.hadNap ? e.napDuration : '',
+                e.sideEffects.join('; '),
+                e.notes
+            ]);
+
+            const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+            const bom = '\uFEFF'; // UTF-8 BOM for Excel
+            const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `rTMS治療記錄_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        // Backup/Restore
+        function exportBackup() {
+            const data = {
+                setup: getSetup(),
+                entries: getEntries(),
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `rTMS備份_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        function importBackup() {
+            const fileInput = document.getElementById('importFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('請選擇備份檔案');
+                return;
+            }
+
+            if (!confirm('匯入備份將會覆蓋現有資料，確定要繼續嗎？')) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (data.setup) {
+                        saveSetupData(data.setup);
+                    }
+                    if (data.entries) {
+                        saveEntries(data.entries);
+                    }
+                    
+                    alert('備份已成功匯入！');
+                    location.reload();
+                } catch (error) {
+                    alert('匯入失敗：檔案格式錯誤');
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearAllData() {
+            if (!confirm('確定要清除所有資料嗎？此操作無法復原！')) {
+                return;
+            }
+
+            if (!confirm('最後確認：您確定要永久刪除所有記錄嗎？')) {
+                return;
+            }
+
+            localStorage.clear();
+            alert('所有資料已清除');
+            location.reload();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initDailyForm();
+            updateHeaderSubtitle();
+            updateCheckpointInfo();
+
+            // Set report date range to all data
+            const entries = getEntries();
+            if (entries.length > 0) {
+                const dates = entries.map(e => e.date).sort();
+                document.getElementById('reportStartDate').value = dates[0];
+                document.getElementById('reportEndDate').value = dates[dates.length - 1];
+            }
+        });
+    </script>
+</body>
+</html>
